@@ -36,8 +36,8 @@ playerLeft.onload = () => (leftLoaded = true);
 playerRight.onload = () => (rightLoaded = true);
 
 const asteroidImage = new Image();
-asteroidImage.src = "asteroid.png";
-const bubblePop = new Audio("burstfire.mp3");
+asteroidImage.src = "bubble.png";
+const bubblePop = new Audio("pop.ogg");
 
 const SHEET_WIDTH = 4405;
 const SHEET_HEIGHT = 1917;

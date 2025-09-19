@@ -7,11 +7,23 @@ body {
   width: 100vw;
   height: 100vh;
   display: flex;
-  justify-content: center;
+  flex-direction: column; 
+  justify-content: flex-start;
   align-items: center;
-  background: url("space.jpg") no-repeat center center fixed;
-  background-size: cover;     
-  background-color: black;    
+  background-image: url("space.jpg");  
+  background-repeat: no-repeat;       
+  background-position: center center;   
+  background-attachment: fixed;        
+  background-size: cover;             
+  background-color: black;             
+}
+
+h1 {
+  margin: 20px 0;
+  font-size: 48px;
+  color: white;
+  font-family: Arial, sans-serif; 
+  text-shadow: 2px 2px 4px black; 
 }
 
 #canvas1 {
