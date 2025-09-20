@@ -29,12 +29,12 @@ window.addEventListener("resize", () => {
 
 // Image and audio assets
 const playerLeft = new Image();
-playerLeft.src = "astronautl.png";
+playerLeft.src = "./astronautl.png";
 const playerRight = new Image();
-playerRight.src = "astronautr.png";
+playerRight.src = "./astronautr.png";
 
 const asteroidImage = new Image();
-asteroidImage.src = "bubble.png";
+asteroidImage.src = "./Bubble.png";
 
 const bubblePop = new Audio("pop.ogg");
 
@@ -185,7 +185,7 @@ function animate() {
   requestAnimationFrame(animate);
 }
 
-// ✅ New loader function: wait for all images to be ready
+
 function loadAssetsAndStartGame() {
   let loadedImages = 0;
   const totalImages = 3;
@@ -193,7 +193,7 @@ function loadAssetsAndStartGame() {
   function checkIfAllLoaded() {
     loadedImages++;
     if (loadedImages === totalImages) {
-      animate(); // ✅ Start game safely
+      animate(); 
     }
   }
 
