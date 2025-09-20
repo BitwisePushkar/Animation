@@ -3,7 +3,7 @@ const ctx = canvas.getContext("2d");
 canvas.width = 1200;
 canvas.height = 800;
 
-let score = 1;
+let score = 0;
 let gameFrame = 0;
 ctx.font = "36px Georgia";
 let canvasPosition = canvas.getBoundingClientRect();
@@ -27,23 +27,24 @@ window.addEventListener("resize", () => {
   canvasPosition = canvas.getBoundingClientRect();
 });
 
-// Image and audio assets
 const playerLeft = new Image();
 playerLeft.src = "./astronautl.png";
 const playerRight = new Image();
 playerRight.src = "./astronautr.png";
+let leftLoaded = false, rightLoaded = false;
+playerLeft.onload = () => (leftLoaded = true);
+playerRight.onload = () => (rightLoaded = true);
 
 const asteroidImage = new Image();
 asteroidImage.src = "./Bubble.png";
-
 const bubblePop = new Audio("pop.ogg");
 
 const SHEET_WIDTH = 4405;
 const SHEET_HEIGHT = 1917;
 const SHEET_COLS = 5;
 const SHEET_ROWS = 3;
-const FRAME_W = SHEET_WIDTH / SHEET_COLS;
-const FRAME_H = SHEET_HEIGHT / SHEET_ROWS;
+const FRAME_W = SHEET_WIDTH / SHEET_COLS; 
+const FRAME_H = SHEET_HEIGHT / SHEET_ROWS; 
 
 class Player {
   constructor() {
@@ -70,16 +71,23 @@ class Player {
     ctx.translate(this.x, this.y);
     const sheet = this.x >= mouse.x ? playerLeft : playerRight;
 
-    const sx = this.frameX * FRAME_W;
-    const sy = this.frameY * FRAME_H;
-    const sw = FRAME_W;
-    const sh = FRAME_H;
-    const dw = sw / 2;
-    const dh = sh / 2;
-    const dx = -dw / 2;
-    const dy = -dh / 2;
-
-    ctx.drawImage(sheet, sx, sy, sw, sh, dx, dy, dw, dh);
+    if ((this.x >= mouse.x && leftLoaded) || (this.x < mouse.x && rightLoaded)) {
+      const sx = this.frameX * FRAME_W;
+      const sy = this.frameY * FRAME_H;
+      const sw = FRAME_W;
+      const sh = FRAME_H;
+      const dw = sw / 2;
+      const dh = sh / 2;
+      const dx = -dw / 2;
+      const dy = -dh / 2;
+      ctx.drawImage(sheet, sx, sy, sw, sh, dx, dy, dw, dh);
+    } else {
+      ctx.fillStyle = "red";
+      ctx.beginPath();
+      ctx.arc(0, 0, this.radius, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.closePath();
+    }
 
     ctx.restore();
   }
@@ -99,13 +107,22 @@ class Bubble {
     this.y -= this.speed;
   }
   draw() {
-    ctx.drawImage(
-      asteroidImage,
-      this.x - this.radius,
-      this.y - this.radius,
-      this.radius * 2,
-      this.radius * 2
-    );
+    if (asteroidImage.complete) {
+      ctx.drawImage(
+        asteroidImage,
+        this.x - this.radius,
+        this.y - this.radius,
+        this.radius * 2,
+        this.radius * 2
+      );
+    } else {
+      ctx.fillStyle = "blue";
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.closePath();
+      ctx.stroke();
+    }
   }
 }
 
@@ -184,23 +201,4 @@ function animate() {
   gameFrame++;
   requestAnimationFrame(animate);
 }
-
-
-function loadAssetsAndStartGame() {
-  let loadedImages = 0;
-  const totalImages = 3;
-
-  function checkIfAllLoaded() {
-    loadedImages++;
-    if (loadedImages === totalImages) {
-      animate(); 
-    }
-  }
-
-  playerLeft.onload = checkIfAllLoaded;
-  playerRight.onload = checkIfAllLoaded;
-  asteroidImage.onload = checkIfAllLoaded;
-}
-
-// Start loading images
-loadAssetsAndStartGame();
+animate();
