@@ -3,6 +3,10 @@
   padding: 0;
 }
 
+html, body {
+  overflow: hidden;
+}
+
 body {
   width: 100vw;
   height: 100vh;
@@ -10,19 +14,19 @@ body {
   flex-direction: column; 
   justify-content: flex-start;
   align-items: center;
-  background-image: url("space.jpg");  
+  background-image: url("./assets/space.jpg");  
   background-repeat: no-repeat;       
   background-position: center center;   
   background-attachment: fixed;        
   background-size: cover;             
-  background-color: black;             
+  background-color: black;              
 }
 
 h1 {
   margin: 20px 0;
   font-size: 48px;
   color: white;
-  font-family: Arial, sans-serif; 
+  font-family: Arial, sans-serif;
   text-shadow: 2px 2px 4px black; 
 }
 

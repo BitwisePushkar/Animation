@@ -28,16 +28,16 @@ window.addEventListener("resize", () => {
 });
 
 const playerLeft = new Image();
-playerLeft.src = "./astronautl.png";
+playerLeft.src = "./assets/astronautl.png";
 const playerRight = new Image();
-playerRight.src = "./astronautr.png";
+playerRight.src = "./assets/astronautr.png";
 let leftLoaded = false, rightLoaded = false;
 playerLeft.onload = () => (leftLoaded = true);
 playerRight.onload = () => (rightLoaded = true);
 
 const asteroidImage = new Image();
-asteroidImage.src = "./Bubble.png";
-const bubblePop = new Audio("pop.ogg");
+asteroidImage.src = "./assets/Bubble.png";
+const bubblePop = new Audio("./assets/pop.ogg");
 
 const SHEET_WIDTH = 4405;
 const SHEET_HEIGHT = 1917;
