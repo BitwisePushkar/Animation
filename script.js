@@ -2,42 +2,33 @@ const canvas = document.getElementById("canvas1");
 const ctx = canvas.getContext("2d");
 canvas.width = 1200;
 canvas.height = 800;
-
 let score = 0;
 let gameFrame = 0;
-ctx.font = "36px Georgia";
 let canvasPosition = canvas.getBoundingClientRect();
 const mouse = { x: canvas.width / 2, y: canvas.height / 2, click: false };
-let gameOver = false;
-const targetScore = 20;
-
-canvas.addEventListener("pointerdown", (e) => {
-  mouse.click = true;
-  canvasPosition = canvas.getBoundingClientRect();
-  mouse.x = e.clientX - canvasPosition.left;
-  mouse.y = e.clientY - canvasPosition.top;
-});
-canvas.addEventListener("pointerup", () => (mouse.click = false));
-canvas.addEventListener("pointermove", (e) => {
-  canvasPosition = canvas.getBoundingClientRect();
-  mouse.x = e.clientX - canvasPosition.left;
-  mouse.y = e.clientY - canvasPosition.top;
-});
-window.addEventListener("resize", () => {
-  canvasPosition = canvas.getBoundingClientRect();
-});
 
 const playerLeft = new Image();
 playerLeft.src = "./assets/astronautl.png";
 const playerRight = new Image();
 playerRight.src = "./assets/astronautr.png";
+const asteroidImage = new Image();
+asteroidImage.src = "./assets/Bubble.png";
+const bubblePop = new Audio("./assets/pop.ogg");
+
 let leftLoaded = false, rightLoaded = false;
 playerLeft.onload = () => (leftLoaded = true);
 playerRight.onload = () => (rightLoaded = true);
 
-const asteroidImage = new Image();
-asteroidImage.src = "./assets/Bubble.png";
-const bubblePop = new Audio("./assets/pop.ogg");
+canvas.addEventListener("pointerdown", (e) => {
+  mouse.click = true;
+  mouse.x = e.clientX - canvasPosition.left;
+  mouse.y = e.clientY - canvasPosition.top;
+});
+canvas.addEventListener("pointerup", () => (mouse.click = false));
+canvas.addEventListener("pointermove", (e) => {
+  mouse.x = e.clientX - canvasPosition.left;
+  mouse.y = e.clientY - canvasPosition.top;
+});
 
 const SHEET_WIDTH = 4405;
 const SHEET_HEIGHT = 1917;
@@ -59,14 +50,6 @@ class Player {
     this.y += (mouse.y - this.y) / 20;
   }
   draw() {
-    if (mouse.click) {
-      ctx.lineWidth = 0.2;
-      ctx.beginPath();
-      ctx.moveTo(this.x, this.y);
-      ctx.lineTo(mouse.x, mouse.y);
-      ctx.stroke();
-    }
-
     ctx.save();
     ctx.translate(this.x, this.y);
     const sheet = this.x >= mouse.x ? playerLeft : playerRight;
@@ -81,14 +64,7 @@ class Player {
       const dx = -dw / 2;
       const dy = -dh / 2;
       ctx.drawImage(sheet, sx, sy, sw, sh, dx, dy, dw, dh);
-    } else {
-      ctx.fillStyle = "red";
-      ctx.beginPath();
-      ctx.arc(0, 0, this.radius, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.closePath();
-    }
-
+    } 
     ctx.restore();
   }
 }
@@ -149,15 +125,8 @@ function handleBubbles() {
     }
 
     if (checkCollision(b, player) && !b.counted) {
-      try {
-        const s = bubblePop.cloneNode();
-        s.play().catch(() => {});
-      } catch (err) {
-        try {
-          bubblePop.currentTime = 0;
-          bubblePop.play();
-        } catch (e) {}
-      }
+      bubblePop.currentTime = 0;
+      bubblePop.play().catch(() => {});
 
       score++;
       b.counted = true;
@@ -181,23 +150,11 @@ function animateSpriteFrames() {
 }
 
 function animate() {
-  if (gameOver) {
-    ctx.fillStyle = "red";
-    ctx.font = "60px Georgia";
-    ctx.fillText("YOU WIN!", canvas.width / 2 - 150, canvas.height / 2);
-    return;
-  }
-
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   player.update();
   player.draw();
   handleBubbles();
   animateSpriteFrames();
-  ctx.fillStyle = "white";
-  ctx.fillText("Score: " + score, 20, 40);
-  if (score >= targetScore) {
-    gameOver = true;
-  }
   gameFrame++;
   requestAnimationFrame(animate);
 }
